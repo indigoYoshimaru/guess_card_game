@@ -76,9 +76,11 @@ def play_game():
 
     p_point = player.get_point()
     if p_point >= 10000:
-        return "\u001b[32m\nCONGRATS!! YOU WON"
+        print("\u001b[32m\nCONGRATS!! YOU WON")
+        return
 
     if p_point < 30:
-        return "\u001b[35m\nYOU LOST"
+        print("\u001b[35m\nYOU LOST")
+        return
 
     play_game()

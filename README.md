@@ -6,11 +6,12 @@ In this game, I applied recursion, OOP, Singleton design pattern and some progra
 
 ## Game play: 
 The game starts when player accepts starting the match. A game might contains multiple matches. 
+
 A match consists of many rounds. The behaviours of each round are sequentially listed below: 
-    - Initially, a card is given to both house and player. 
-    - While house must show its card, player must guess whether his/her card is greater than the house card.
-    - If the guess is correct, the player wins the round and asked whether he/she wishes to continue the match.
-    - Otherwise, the player is forced to continue the game until he/she wins to make the decision or the deck runs out of card. 
+    -Initially, a card is given to both house and player. 
+    -While house must show its card, player must guess whether his/her card is greater than the house card.
+    -If the guess is correct, the player wins the round and asked whether he/she wishes to continue the match.
+    -Otherwise, the player is forced to continue the game until he/she wins to make the decision or the deck runs out of card. 
 
 Any bonus or punishment follows the given instruction
 
