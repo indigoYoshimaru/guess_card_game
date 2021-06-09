@@ -75,7 +75,7 @@ class Game:
         self.__player.stop_match(reward)
 
         p_point = self.__player.get_point()
-        if p_point >= 10000:
+        if p_point >= 1000:
             self._c_controller.print_congrat("Congrats!!! You win the game!!")
             return
 
