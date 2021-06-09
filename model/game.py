@@ -1,86 +1,86 @@
+from model.command_controller import CommandController
 import model.role_player as rp
 import model.deck as deck
-import re
-current_deck = deck.Deck()
-player = rp.Player()
-house = rp.House()
-# house.set_current_card(current_deck.cards[0])
 
 
-def handle_input(input):
-    # None  # regex here return true
-    x = re.search("^(Y|y)", input)
-    if (x):
-        return True
-    return False
+class Game:
 
+    _c_controller = CommandController()
+    __round = 0
+    # house.set_current_card(current_deck.cards[0])
 
-def play_round():
-    p_card = current_deck.get_random_card()
-    h_card = current_deck.get_random_card()
-    if (not p_card) or (not h_card):
-        print("\u001b[36mEnd of deck")
-        return None
+    def __init__(self, c_controller):
+        self._c_controller = c_controller
+        self.__current_deck = deck.Deck(c_controller)
+        self.__player = rp.Player(c_controller)
+        self.__house = rp.House(c_controller)
 
-    player.set_current_card(p_card)
-    house.set_current_card(h_card)
+    def play_round(self):
+        self.__round += 1
+        self._c_controller.print_congrat("Round "+str(self.__round))
+        p_card = self.__current_deck.get_random_card()
+        h_card = self.__current_deck.get_random_card()
+        if (not p_card) or (not h_card):
+            self._c_controller.print_info("End of deck")
+            # print("\u001b[36mEnd of deck")
+            return None
 
-    input_string = input(
-        "\u001b[0mDo you think your card is greater than the house's card? \n[Accept answer starts with Y or y for 'yes', any other answers are considered as 'no'] ")
-    is_greater = handle_input(input_string)
-    player.show_current_card()
-    # if win the match, player must decide to whether to continue or stop
-    if (is_greater and player.get_current_card() > house.get_current_card()) or (not is_greater and player.get_current_card() < house.get_current_card()):
-        current_deck.update_reward()
-        input_string = input(
-            "\u001b[0mDo you want to continue? \n[Accept answer starts with Y or y for 'yes', any other answers are considered as 'no'] ")
-        player.set_state(handle_input(input_string))
-        return True
+        self.__player.set_current_card(p_card)
+        self.__house.set_current_card(h_card)
+        self._c_controller.print_question(
+            "Greater or Smaller????")
+        is_greater = self._c_controller.handle_g_input(input())
+        self.__player.show_current_card()
+        # if win the match, player must decide to whether to continue or stop
+        if (is_greater and self.__player.get_current_card() > self.__house.get_current_card()) or (not is_greater and self.__player.get_current_card() < self.__house.get_current_card()):
+            self.__current_deck.update_reward()
+            self._c_controller.print_question("Continue match?")
+            self.__player.set_state(
+                self._c_controller.handle_y_input(input()))
+            return True
 
-    return False
+        return False
 
+    def play_match(self):
+        # player.reduce_point(25)
+        # loop rounds
 
-def play_match():
-    # player.reduce_point(25)
-    # loop rounds
+        round_won = self.play_round()
+        if round_won == None:
+            return
 
-    round_won = play_round()
-    if round_won == None:
-        return
+        if (round_won) and (not self.__player.get_state()):
+            return
 
-    if (round_won) and (not player.get_state()):
-        return
+        if not round_won:
+            self.__current_deck.reset_reward()
+            return self.play_match()
 
-    if not round_won:
-        current_deck.reset_reward()
-        return play_match()
+        return self.play_match()
 
-    return play_match()
+    def play_game(self):
 
+        # start match
+        self._c_controller.print_question("Starting new match?")
+        start_match = self._c_controller.handle_y_input(input())
+        if not start_match:
+            self._c_controller.print_info("Closing the game.... ")
+            return
 
-def play_game():
+        self.__current_deck.start_deck()
+        self.__player.reduce_point(25)
+        self.play_match()
 
-    # start match
-    start_match = handle_input(input(
-        "\u001b[36m\nStarting new match? \n[Accept answer starts with Y or y for 'yes', any other answers are considered as 'no'] "))
-    if not start_match:
-        print("\n Closing the game.... ")
-        return
+        reward = self.__current_deck.get_current_reward()
+        self.__player.stop_match(reward)
 
-    current_deck.start_deck()
-    player.reduce_point(25)
-    play_match()
+        p_point = self.__player.get_point()
+        if p_point >= 10000:
+            self._c_controller.print_congrat("Congrats!!! You win the game!!")
+            return
 
-    reward = current_deck.get_current_reward()
-    player.stop_match(reward)
+        if p_point < 30:
+            self._c_controller.print_blame("Bravo!!! The game wins you!!")
+            return
 
-    p_point = player.get_point()
-    if p_point >= 10000:
-        print("\u001b[32m\nCONGRATS!! YOU WON")
-        return
-
-    if p_point < 30:
-        print("\u001b[35m\nYOU LOST")
-        return
-
-    play_game()
+        self.play_game()

@@ -1,0 +1,11 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|  To answer the game question, please enter any answer that  | 
+|  starts with Y or y for "yes", any other answer will be     |
+|  considered as "no"                                         |  
+|                                                             |
+|  For each round, you will be asked whether your card is     |
+|  greater than the component's card or not. To answer this   |
+|  question, please enter any answer starts with G or g for   |
+|  "greater".                                                 | 
+|   HAVE FUN!                                                 |
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

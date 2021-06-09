@@ -1,6 +1,9 @@
 # Singleton will be used in this exercise
 # since there should be only 1 player and 1 house in this exercise
 
+from model.command_controller import CommandController
+
+
 class SingletonMeta(type):
     _instances = {}
 
@@ -12,8 +15,9 @@ class SingletonMeta(type):
 
 
 class Player(metaclass=SingletonMeta):
-    def __init__(self):
+    def __init__(self, c_controller):
         self.__point = 60
+        self._c_controller = c_controller
 
     def set_state(self, is_continued):
         self.__is_continued = is_continued
@@ -22,7 +26,7 @@ class Player(metaclass=SingletonMeta):
         return self.__is_continued
 
     def show_current_card(self):
-        print("\nYour card is: ")
+        self._c_controller.print_info("Your card is: ")
         return self.__current_card.draw_card()
 
     def set_current_card(self, card):
@@ -36,24 +40,33 @@ class Player(metaclass=SingletonMeta):
 
     def reduce_point(self, point):
         self.__point -= point
-        print("\nYou have %s points left" % self.__point)
+        self._c_controller.print_info(
+            "You have "+str(self.__point)+" points left")
+        # print("\nYou have %s points left" % self.__point)
 
     def add_point(self, point):
         self.__point += point
 
     def stop_match(self, reward):
-        print("YOU REWARDS AFTER THE ROUNDS: ", reward)
+        self._c_controller.print_info(
+            "Your reward after the match: " + str(reward))
         self.add_point(reward)
-        print("YOUR CURRENT POINT: ", self.get_point())
+        self._c_controller.print_info(
+            "Your current point: "+str(self.get_point()))
+        # print("YOUR CURRENT POINT: ", self.get_point())
 
 
 class House(metaclass=SingletonMeta):
+
+    def __init__(self, c_controller):
+        self._c_controller = c_controller
+
     def set_current_card(self, card):
         self.__current_card = card
 
         # closure
         def show_card():
-            print("\nThe house's card is: ")
+            self._c_controller.print_info("The house's card is: ")
             self.__current_card.draw_card()
 
         return show_card()
