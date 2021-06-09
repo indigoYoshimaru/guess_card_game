@@ -16,7 +16,7 @@ A match consists of many rounds. The behaviours of each round are sequentially l
 Any bonus or punishment follows the given instruction
 
 ## Run the game: 
-The game uses Python3 and runs on terminal. To start the game, one should enter the directory and run: <br>
+The game uses Python3 and runs on terminal (might not perfectly work for cmd or powershell). To start the game, one should enter the directory and run: <br>
 `python main.py`
 
 ----
